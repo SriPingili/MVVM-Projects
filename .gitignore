@@ -1,0 +1,14 @@
+*.iml
+*.idea
+*.idea/
+.gradle
+/local.properties
+/.idea
+.DS_Store
+/build
+/captures
+/projectFilesBackup
+.idea/
+.idea
+ShoppingList/.idea/
+/.idea/
