@@ -1,6 +1,7 @@
 package com.example.shoppinglist.ui.shoppinglist
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.liveData
 import com.example.shoppinglist.data.db.entities.ShoppingItem
 import com.example.shoppinglist.data.repositories.ShoppingListRepository
 import kotlinx.coroutines.CoroutineScope
@@ -17,5 +18,8 @@ class ShoppingListViewModel(private val repository: ShoppingListRepository) : Vi
         repository.delete(item)
     }
 
-    fun getAllShoppingItems() = repository.getAllShoppingItems()
+    fun getAllShoppingItems() = liveData {
+        val some = repository.getAllShoppingItems()
+        emitSource(some)
+    }
 }
