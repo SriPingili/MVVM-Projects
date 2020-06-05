@@ -49,6 +49,8 @@ public class TaskDaoTest {
 
     @Test
     public void insertTask() throws Exception {
+        assertEquals(LiveDataTestUtil.getOrAwaitValue(database.taskDao().loadAllTasks()).size(), 0);
+
         // given
         TaskEntry task1 = new TaskEntry("task one", 1, new Date());
         TaskEntry task2 = new TaskEntry("task two", 2, new Date());
