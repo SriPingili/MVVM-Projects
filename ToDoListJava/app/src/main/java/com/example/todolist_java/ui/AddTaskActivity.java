@@ -25,6 +25,7 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
@@ -60,6 +61,7 @@ public class AddTaskActivity extends AppCompatActivity {
     Button mButton;
 
     private int mTaskId = DEFAULT_TASK_ID;
+    private AddTaskViewModel viewModel;
 
     // Member variable for the Database
     private AppDatabase mDb;
@@ -83,14 +85,19 @@ public class AddTaskActivity extends AppCompatActivity {
                 // populate the UI
                 mTaskId = intent.getIntExtra(EXTRA_TASK_ID, DEFAULT_TASK_ID);
                 AddTaskViewModelFactory factory = new AddTaskViewModelFactory(mDb, mTaskId);
-                AddTaskViewModel viewModel = ViewModelProviders.of(this, factory).get(AddTaskViewModel.class);
+                viewModel = ViewModelProviders.of(this, factory).get(AddTaskViewModel.class);
 
-                testLiveData(viewModel);
+                testLiveData();
             }
         }
     }
 
-    protected void testLiveData(AddTaskViewModel viewModel){
+    @VisibleForTesting
+    public void setTestViewModel(AddTaskViewModel testViewModel) {
+        this.viewModel = testViewModel;
+    }
+
+    protected void testLiveData(){
         final LiveData<TaskEntry> task = viewModel.getTaskEntry();
         task.observe(this, new Observer<TaskEntry>() {
             @Override
@@ -130,7 +137,7 @@ public class AddTaskActivity extends AppCompatActivity {
      *
      * @param task the taskEntry to populate the UI
      */
-    private void populateUI(TaskEntry task) {
+    protected void populateUI(TaskEntry task) {
         if (task == null) {
             return;
         }
