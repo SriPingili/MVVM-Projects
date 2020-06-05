@@ -49,7 +49,7 @@ public class TaskDaoTest {
 
     @Test
     public void insertTask() throws Exception {
-        assertEquals(LiveDataTestUtil.getOrAwaitValue(database.taskDao().loadAllTasks()).size(), 0);
+        int initialSize = LiveDataTestUtil.getOrAwaitValue(database.taskDao().loadAllTasks()).size();
 
         // given
         TaskEntry task1 = new TaskEntry("task one", 1, new Date());
@@ -58,11 +58,14 @@ public class TaskDaoTest {
         dao.insertTask(task1);
         dao.insertTask(task2);
 
-        assertEquals(LiveDataTestUtil.getOrAwaitValue(database.taskDao().loadAllTasks()).size(), 2);
-        assertEquals(LiveDataTestUtil.getOrAwaitValue(database.taskDao().loadAllTasks()).get(0).getDescription(), task1.getDescription());
-        assertEquals(LiveDataTestUtil.getOrAwaitValue(database.taskDao().loadAllTasks()).get(1).getDescription(), task2.getDescription());
-        assertEquals(LiveDataTestUtil.getOrAwaitValue(database.taskDao().loadAllTasks()).get(0).getPriority(), task1.getPriority());
-        assertEquals(LiveDataTestUtil.getOrAwaitValue(database.taskDao().loadAllTasks()).get(1).getPriority(), task2.getPriority());
+        List<TaskEntry> updatedList = LiveDataTestUtil.getOrAwaitValue(database.taskDao().loadAllTasks());
+
+        assertEquals(0, initialSize);
+        assertEquals(updatedList.size(), 2);
+        assertEquals(updatedList.get(0).getDescription(), task1.getDescription());
+        assertEquals(updatedList.get(1).getDescription(), task2.getDescription());
+        assertEquals(updatedList.get(0).getPriority(), task1.getPriority());
+        assertEquals(updatedList.get(1).getPriority(), task2.getPriority());
 
 //        verify(observer).onChanged(Collections.singletonList(task1));
     }
@@ -75,16 +78,17 @@ public class TaskDaoTest {
 
         dao.insertTask(task1);
 
-        assertEquals(LiveDataTestUtil.getOrAwaitValue(database.taskDao().loadAllTasks()).size(), 1);
-
-        int id = LiveDataTestUtil.getOrAwaitValue(database.taskDao().loadAllTasks()).get(0).getId();
+        TaskEntry afterInsert = LiveDataTestUtil.getOrAwaitValue(database.taskDao().loadAllTasks()).get(0);
+        int id = afterInsert.getId();
         task1.setId(id);
         task1.setDescription(updatedDescription);
 
         dao.updateTask(task1);
 
-        String currentDescription = LiveDataTestUtil.getOrAwaitValue(database.taskDao().loadAllTasks()).get(0).getDescription();
-        assertEquals(currentDescription, updatedDescription);
+        TaskEntry afterUpdate = LiveDataTestUtil.getOrAwaitValue(database.taskDao().loadTaskById(id));
+
+        assertEquals(afterInsert.getDescription(), initialDescription);
+        assertEquals(afterUpdate.getDescription(), updatedDescription);
     }
 
 
@@ -95,14 +99,18 @@ public class TaskDaoTest {
 
         dao.insertTask(task1);
 
-        assertEquals(LiveDataTestUtil.getOrAwaitValue(database.taskDao().loadAllTasks()).size(), 1);
+        List<TaskEntry> afterInsert = LiveDataTestUtil.getOrAwaitValue(database.taskDao().loadAllTasks());
 
-        int id = LiveDataTestUtil.getOrAwaitValue(database.taskDao().loadAllTasks()).get(0).getId();
+        int id = afterInsert.get(0).getId();
 
         task1.setId(id);
         dao.deleteTask(task1);
 
-        assertEquals(LiveDataTestUtil.getOrAwaitValue(database.taskDao().loadAllTasks()).size(), 0);
+//        TaskEntry afterDelete = LiveDataTestUtil.getOrAwaitValue(database.taskDao().loadTaskById(id));
+        List<TaskEntry> afterDelete = LiveDataTestUtil.getOrAwaitValue(database.taskDao().loadAllTasks());
+        assertEquals(afterInsert.size(), 1);
+        assertEquals(afterDelete.size(),0);
+//        assertEquals(afterDelete, null);
     }
 
     @Test
