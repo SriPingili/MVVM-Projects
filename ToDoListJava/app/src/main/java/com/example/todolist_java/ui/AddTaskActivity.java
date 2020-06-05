@@ -85,18 +85,23 @@ public class AddTaskActivity extends AppCompatActivity {
                 AddTaskViewModelFactory factory = new AddTaskViewModelFactory(mDb, mTaskId);
                 AddTaskViewModel viewModel = ViewModelProviders.of(this, factory).get(AddTaskViewModel.class);
 
-                final LiveData<TaskEntry> task = viewModel.getTaskEntry();
-                task.observe(this, new Observer<TaskEntry>() {
-                    @Override
-                    public void onChanged(@Nullable TaskEntry taskEntry) {
-                        task.removeObserver(this);
-                        Log.d(TAG, "Receiving database update from LiveData");
-                        populateUI(taskEntry);
-                    }
-                });
+                testLiveData(viewModel);
             }
         }
     }
+
+    protected void testLiveData(AddTaskViewModel viewModel){
+        final LiveData<TaskEntry> task = viewModel.getTaskEntry();
+        task.observe(this, new Observer<TaskEntry>() {
+            @Override
+            public void onChanged(@Nullable TaskEntry taskEntry) {
+                task.removeObserver(this);
+                Log.d(TAG, "Receiving database update from LiveData");
+                populateUI(taskEntry);
+            }
+        });
+    }
+
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {

@@ -18,7 +18,7 @@ public interface TaskDao {
     @Query("SELECT * FROM task ORDER BY priority")
     LiveData<List<TaskEntry>> loadAllTasks();
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertTask(TaskEntry taskEntry);
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
