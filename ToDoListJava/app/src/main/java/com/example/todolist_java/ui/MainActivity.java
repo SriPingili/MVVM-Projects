@@ -23,7 +23,9 @@ import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -32,6 +34,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.todolist_java.excecutor.AppExecutors;
+import com.example.todolist_java.ui.viewmodel.AddTaskViewModel;
 import com.example.todolist_java.ui.viewmodel.MainViewModel;
 import com.example.todolist_java.R;
 import com.example.todolist_java.recyclerview.TaskAdapter;
@@ -49,9 +52,11 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
     private static final String TAG = MainActivity.class.getSimpleName();
     // Member variables for the adapter and RecyclerView
     private RecyclerView mRecyclerView;
-    private TaskAdapter mAdapter;
+    protected TaskAdapter mAdapter;
 
     private AppDatabase mDb;
+
+    private MainViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +76,8 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
 
         DividerItemDecoration decoration = new DividerItemDecoration(getApplicationContext(), VERTICAL);
         mRecyclerView.addItemDecoration(decoration);
+
+        viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
 
         /*
          Add a touch helper to the RecyclerView to recognize when a user swipes to delete an item.
@@ -118,9 +125,14 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
         setupViewModel();
     }
 
-    private void setupViewModel() {
-        MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-        viewModel.getTasks().observe(this, new Observer<List<TaskEntry>>() {
+    @VisibleForTesting
+    public void setTestViewModel(MainViewModel mainViewModel) {
+        this.viewModel = mainViewModel;
+    }
+
+    protected void setupViewModel() {
+        LiveData<List<TaskEntry>> liveData = viewModel.getTasks();
+        liveData.observe(this, new Observer<List<TaskEntry>>() {
             @Override
             public void onChanged(@Nullable List<TaskEntry> taskEntries) {
                 Log.d(TAG, "Updating list of tasks from LiveData in ViewModel");

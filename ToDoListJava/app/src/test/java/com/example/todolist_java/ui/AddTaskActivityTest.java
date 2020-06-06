@@ -22,6 +22,7 @@ import org.robolectric.RobolectricTestRunner;
 
 import java.util.Date;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -82,15 +83,15 @@ public class AddTaskActivityTest {
 
         doReturn(liveData).when(addTaskViewModel).getTaskEntry();
 
-
         spyActivity.testLiveData();
 
         verify(liveData).observe(ArgumentMatchers.any(LifecycleOwner.class), teamsObserverCaptor.capture());
 
-
         teamsObserverCaptor.getValue().onChanged(taskEntry);
         verify(liveData).removeObserver(teamsObserverCaptor.getValue());
         verify(spyActivity).populateUI(taskEntry);
+        verify(spyActivity).setPriorityInViews(taskEntry.getPriority());
+        assertEquals(spyActivity.mEditText.getText().toString(),taskEntry.getDescription());
 
     }
 }
