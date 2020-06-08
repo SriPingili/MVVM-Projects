@@ -1,4 +1,4 @@
-package com.example.todolist_java;
+package com.example.todolist_java.database;
 
 import android.content.Context;
 
@@ -8,7 +8,7 @@ import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import com.example.todolist_java.database.AppDatabase;
+import com.example.todolist_java.LiveDataTestUtil;
 import com.example.todolist_java.database.dao.TaskDao;
 import com.example.todolist_java.database.entity.TaskEntry;
 
@@ -21,10 +21,12 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
 
 @RunWith(AndroidJUnit4.class)
 public class TaskDaoTest {
@@ -43,7 +45,7 @@ public class TaskDaoTest {
         MockitoAnnotations.initMocks(this);
 
         Context context = ApplicationProvider.getApplicationContext();
-        database = Room.inMemoryDatabaseBuilder(context, AppDatabase.class).build();
+        database = Room.inMemoryDatabaseBuilder(context, AppDatabase.class).allowMainThreadQueries().build();
         dao = database.taskDao();
     }
 
@@ -66,8 +68,6 @@ public class TaskDaoTest {
         assertEquals(updatedList.get(1).getDescription(), task2.getDescription());
         assertEquals(updatedList.get(0).getPriority(), task1.getPriority());
         assertEquals(updatedList.get(1).getPriority(), task2.getPriority());
-
-//        verify(observer).onChanged(Collections.singletonList(task1));
     }
 
     @Test

@@ -37,24 +37,6 @@ dependencies {
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-
-    testImplementation "org.robolectric:robolectric:4.0.1"
-    testImplementation 'androidx.test:core:1.0.0'
-    testImplementation 'junit:junit:4.12'
-    testImplementation('com.squareup:fest-android:1.0.8') {
-        exclude group: 'com.android.support', module: 'support-v4'
-    }
-    //https://stackoverflow.com/questions/48049131/cannot-resolve-symbol-instanttaskexecutorrule/56073388#56073388
-    androidTestImplementation "androidx.arch.core:core-testing:2.0.0"
-    testImplementation "androidx.arch.core:core-testing:2.0.0"
-
-    testImplementation 'org.khronos:opengl-api:gl1.1-android-2.1_r1'
-    testImplementation 'org.mockito:mockito-core:2.23.4'
-    androidTestImplementation 'org.mockito:mockito-android:2.23.4' //// For instrumentation tests on Android devices and emulators
-    testImplementation 'org.powermock:powermock-module-junit4:2.0.2'
-    testImplementation 'org.powermock:powermock-api-mockito2:2.0.2'
 
 
     // Room components
@@ -73,4 +55,28 @@ dependencies {
     androidTestImplementation 'com.android.support:support-annotations:28.0.0'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test:rules:1.0.2'
+
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    testImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+    testImplementation "org.robolectric:robolectric:4.0.1"
+    testImplementation 'androidx.test:core:1.0.0'
+    testImplementation 'junit:junit:4.12'
+    testImplementation('com.squareup:fest-android:1.0.8') {
+        exclude group: 'com.android.support', module: 'support-v4'
+    }
+
+    //https://stackoverflow.com/questions/48049131/cannot-resolve-symbol-instanttaskexecutorrule/56073388#56073388
+    androidTestImplementation "androidx.arch.core:core-testing:2.0.0"
+    testImplementation "androidx.arch.core:core-testing:2.0.0"
+
+    testImplementation 'org.khronos:opengl-api:gl1.1-android-2.1_r1'
+    testImplementation 'org.mockito:mockito-core:2.23.4'
+    androidTestImplementation 'org.mockito:mockito-android:2.23.4' //// For instrumentation tests on Android devices and emulators
+    testImplementation 'org.powermock:powermock-module-junit4:2.0.2'
+    testImplementation 'org.powermock:powermock-api-mockito2:2.0.2'
+
+    // Dependencies for local unit tests
+    testImplementation "org.hamcrest:hamcrest-all:$hamcrestVersion"
 }
